@@ -50,35 +50,36 @@ class network {
 #
 # === Parameters:
 #
-#   $ensure          - required - up|down
-#   $ipaddress       - optional
-#   $netmask         - optional
-#   $macaddress      - optional
-#   $manage_hwaddr   - optional - defaults to true
-#   $gateway         - optional
-#   $noaliasrouting  - optional - defaults to false
-#   $bootproto       - optional
-#   $userctl         - optional - defaults to false
-#   $mtu             - optional
-#   $dhcp_hostname   - optional
-#   $ethtool_opts    - optional
-#   $bonding_opts    - optional
-#   $isalias         - optional
-#   $peerdns         - optional
-#   $dns1            - optional
-#   $dns2            - optional
-#   $domain          - optional
-#   $bridge          - optional
-#   $scope           - optional
-#   $linkdelay       - optional
-#   $check_link_down - optional
-#   $flush           - optional
-#   $zone            - optional
-#   $metric          - optional
-#   $defroute        - optional
-#   $promisc         - optional - defaults to false
-#   $restart         - optional - defaults to true
-#   $arpcheck        - optional - defaults to true
+#   $ensure              - required - up|down
+#   $ipaddress           - optional
+#   $netmask             - optional
+#   $macaddress          - required
+#   $manage_hwaddr       - optional - defaults to true
+#   $gateway             - optional
+#   $noaliasrouting      - optional - defaults to false
+#   $bootproto           - optional
+#   $userctl             - optional - defaults to false
+#   $mtu                 - optional
+#   $dhcp_hostname       - optional
+#   $persistent_dhclient - optional - defaults to false
+#   $ethtool_opts        - optional
+#   $bonding_opts        - optional
+#   $isalias             - optional
+#   $peerdns             - optional
+#   $dns1                - optional
+#   $dns2                - optional
+#   $domain              - optional
+#   $bridge              - optional
+#   $scope               - optional
+#   $linkdelay           - optional
+#   $check_link_down     - optional
+#   $flush               - optional
+#   $zone                - optional
+#   $metric              - optional
+#   $defroute            - optional
+#   $promisc             - optional - defaults to false
+#   $restart             - optional - defaults to true
+#   $arpcheck            - optional - defaults to true
 #
 # === Actions:
 #
@@ -91,7 +92,6 @@ class network {
 #   SCOPE=
 #   SRCADDR=
 #   NOZEROCONF=yes
-#   PERSISTENT_DHCLIENT=yes|no|1|0
 #   DHCPRELEASE=yes|no|1|0
 #   DHCLIENT_IGNORE_GATEWAY=yes|no|1|0
 #   REORDER_HDR=yes|no
@@ -121,6 +121,7 @@ define network_if_base (
   Boolean $userctl = false,
   Optional[String] $mtu = undef,
   Optional[String] $dhcp_hostname = undef,
+  Boolean $persistent_dhclient = false,
   Optional[String] $ethtool_opts = undef,
   Optional[String] $bonding_opts = undef,
   Boolean $isalias = false,
@@ -186,38 +187,39 @@ define network_if_base (
       default => undef,
     }
     $iftemplate = epp("${module_name}/ifcfg-eth.epp", {
-      interface       => $interface,
-      bootproto       => $bootproto,
-      manage_hwaddr   => $manage_hwaddr,
-      macaddress      => $macaddress,
-      onboot          => $onboot,
-      ipaddress       => $ipaddress,
-      netmask         => $netmask,
-      gateway         => $gateway,
-      mtu             => $mtu,
-      bonding_opts    => $bonding_opts,
-      dhcp_hostname   => $dhcp_hostname,
-      ethtool_opts    => $ethtool_opts,
-      peerdns         => $peerdns,
-      dns1            => $dns1_real,
-      dns2            => $dns2_real,
-      domain          => $domain,
-      userctl         => $userctl,
-      ipv6init        => $ipv6init,
-      ipv6autoconf    => $ipv6autoconf,
-      ipv6address     => $ipv6address,
-      ipv6gateway     => $ipv6gateway,
-      ipv6peerdns     => $ipv6peerdns,
-      ipv6secondaries => $ipv6secondaries,
-      bridge          => $bridge,
-      linkdelay       => $linkdelay,
-      scope           => $scope,
-      check_link_down => $check_link_down,
-      defroute        => $defroute,
-      zone            => $zone,
-      metric          => $metric,
-      promisc         => $promisc,
-      arpcheck        => $arpcheck,
+      interface           => $interface,
+      bootproto           => $bootproto,
+      persistent_dhclient => $persistent_dhclient,
+      manage_hwaddr       => $manage_hwaddr,
+      macaddress          => $macaddress,
+      onboot              => $onboot,
+      ipaddress           => $ipaddress,
+      netmask             => $netmask,
+      gateway             => $gateway,
+      mtu                 => $mtu,
+      bonding_opts        => $bonding_opts,
+      dhcp_hostname       => $dhcp_hostname,
+      ethtool_opts        => $ethtool_opts,
+      peerdns             => $peerdns,
+      dns1                => $dns1_real,
+      dns2                => $dns2_real,
+      domain              => $domain,
+      userctl             => $userctl,
+      ipv6init            => $ipv6init,
+      ipv6autoconf        => $ipv6autoconf,
+      ipv6address         => $ipv6address,
+      ipv6gateway         => $ipv6gateway,
+      ipv6peerdns         => $ipv6peerdns,
+      ipv6secondaries     => $ipv6secondaries,
+      bridge              => $bridge,
+      linkdelay           => $linkdelay,
+      scope               => $scope,
+      check_link_down     => $check_link_down,
+      defroute            => $defroute,
+      zone                => $zone,
+      metric              => $metric,
+      promisc             => $promisc,
+      arpcheck            => $arpcheck,
     })
   }
 

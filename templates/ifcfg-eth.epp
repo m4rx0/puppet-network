@@ -3,6 +3,9 @@
 ###
 DEVICE=<%= $interface %>
 BOOTPROTO=<%= $bootproto %>
+<% if $bootproto == 'dhcp' { -%>
+PERSISTENT_DHCLIENT=<%= bool2num($persistent_dhclient) %>
+<% } -%>
 <% if $manage_hwaddr and $macaddress { %>HWADDR=<%= $macaddress %><% } %>
 ONBOOT=<%= $onboot %>
 HOTPLUG=<%= $onboot %>
