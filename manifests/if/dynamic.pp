@@ -13,6 +13,8 @@
 #   $dhcp_hostname   - optional
 #   $ethtool_opts    - optional
 #   $peerdns         - optional
+#   $dns1            - optional - only used when peerdns is true
+#   $dns2            - optional - only used when peerdns is true
 #   $linkdelay       - optional
 #   $check_link_down - optional
 #   $zone            - optional
@@ -56,6 +58,8 @@ define network::if::dynamic (
   $persistent_dhclient = false,
   $ethtool_opts        = undef,
   $peerdns             = false,
+  $dns1                = undef,
+  $dns2                = undef,
   $linkdelay           = undef,
   $check_link_down     = false,
   $defroute            = undef,
@@ -80,6 +84,10 @@ define network::if::dynamic (
   validate_bool($manage_hwaddr)
   validate_bool($persistent_dhclient)
 
+  if !$peerdns and ($dns1 or $dns2) {
+    fail('$peerdns must be true when $dns1 or $dns2 are specified')
+  }
+
   network_if_base { $title:
     ensure              => $ensure,
     ipaddress           => '',
@@ -94,6 +102,8 @@ define network::if::dynamic (
     persistent_dhclient => $persistent_dhclient,
     ethtool_opts        => $ethtool_opts,
     peerdns             => $peerdns,
+    dns1                => $dns1,
+    dns2                => $dns2,
     linkdelay           => $linkdelay,
     check_link_down     => $check_link_down,
     defroute            => $defroute,
