@@ -5,6 +5,7 @@ require 'spec_helper'
 describe 'network::route', :type => 'define' do
 
   context 'singular parameters' do
+    let(:pre_condition) { "file { 'ifcfg-eth1': }" }
     let(:title) { 'eth1' }
     let :params do {
       :ipaddress => [ '192.168.2.1', ],
@@ -12,7 +13,12 @@ describe 'network::route', :type => 'define' do
       :gateway   => [ '192.168.1.2', ],
     }
     end
-    let(:facts) {{ :osfamily => 'RedHat' }}
+    let :facts do {
+      :os => {
+        :family => 'RedHat'
+      }
+    }
+    end
     it { should contain_file('route-eth1').with(
       :ensure => 'present',
       :mode   => '0644',
@@ -32,6 +38,7 @@ describe 'network::route', :type => 'define' do
   end
 
   context 'singular parameters, restart => false' do
+    let(:pre_condition) { "file { 'ifcfg-eth1': }" }
     let(:title) { 'eth1' }
     let :params do {
       :ipaddress => [ '192.168.2.1', ],
@@ -40,7 +47,12 @@ describe 'network::route', :type => 'define' do
       :restart   => false,
     }
     end
-    let(:facts) {{ :osfamily => 'RedHat' }}
+    let :facts do {
+      :os => {
+        :family => 'RedHat'
+      }
+    }
+    end
     it { should contain_file('route-eth1').with(
       :ensure => 'present',
       :mode   => '0644',
@@ -60,6 +72,7 @@ describe 'network::route', :type => 'define' do
   end
 
   context 'array parameters' do
+    let(:pre_condition) { "file { 'ifcfg-eth2': }" }
     let(:title) { 'eth2' }
     let :params do {
       :ipaddress => [ '192.168.2.0', '10.0.0.0', ],
@@ -67,7 +80,12 @@ describe 'network::route', :type => 'define' do
       :gateway   => [ '192.168.1.1', '10.0.0.1', ]
     }
     end
-    let(:facts) {{ :osfamily => 'RedHat' }}
+    let :facts do {
+      :os => {
+        :family => 'RedHat'
+      }
+    }
+    end
     it { should contain_file('route-eth2').with(
       :ensure => 'present',
       :mode   => '0644',
